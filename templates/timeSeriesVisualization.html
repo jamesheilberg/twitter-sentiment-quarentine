@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class='content-section'>
+		<form method="POST" action="" enctype="multipart/form-data">
+			{{ form.hidden_tag() }}
+			<fieldset class="form-group">
+				<legend class ="border-bottom mb-4">Generate a Time Series Visulization of Tweets Sentiment Related to the COVID-19 Quarentine</legend>
+				<div class="form-group">
+					{{ form.lookback.label(class="form-check-label") }}
+					{{ form.lookback(class="form-control form-control-lg") }}
+				</div>
+				<div class="form-group">
+					{{ form.daily_sample_size.label(class="form-check-label") }}
+					{{ form.daily_sample_size(class="form-control form-control-lg") }}
+				</div>
+			</fieldset>
+			<div class="form-group">
+				{{ form.submit(class="btn btn-outline-info")}}
+			</div>
+			<div>
+			<center>
+		    <h3>Avg. Quarentine Sentiment by Day</h3>
+
+		    <canvas id="chart" width="600" height="400"></canvas>
+		    <script>
+
+		      // bar chart data
+		      var barData = {
+		        labels : [
+		          {% for item in labels %}
+		            "{{ item }}",
+		          {% endfor %}
+		        ],
+
+		        datasets : [{
+		          fillColor: "rgba(151,187,205,0.2)",
+		          strokeColor: "rgba(151,187,205,1)",
+		          pointColor: "rgba(151,187,205,1)",
+		          pointStrokeColor: "#fff",
+		          pointHighlightFill: "#fff",
+		          pointHighlightStroke: "rgba(151,187,205,1)",
+		          bezierCurve : false,
+		          data : [
+			    {% for item in values %}
+		            {{ item }},
+		        {% endfor %}]
+		        }
+		        ]
+		    }
+
+		      Chart.defaults.global.animationSteps = 50;
+		      Chart.defaults.global.tooltipYPadding = 16;
+		      Chart.defaults.global.tooltipCornerRadius = 0;
+		      Chart.defaults.global.tooltipTitleFontStyle = "normal";
+		      Chart.defaults.global.tooltipFillColor = "rgba(0,0,0,0.8)";
+		      Chart.defaults.global.animationEasing = "easeOutBounce";
+		      Chart.defaults.global.responsive = false;
+		      Chart.defaults.global.scaleLineColor = "black";
+		      Chart.defaults.global.scaleFontSize = 16;
+
+		      // get bar chart canvas
+		      var mychart = document.getElementById("chart").getContext("2d");
+
+		      steps = 1
+		      max = {{ max }}
+		      min = {{ min }}
+		      // draw bar chart
+		      var LineChartDemo = new Chart(mychart).Line(barData, {
+		        scaleOverride: true,
+		        scaleSteps: steps,
+		        scaleStepWidth: Math.ceil(1 / steps),
+		        scaleStartValue: 0,
+		        scaleShowVerticalLines: true,
+		        scaleShowGridLines : true,
+		        barShowStroke : true,
+		        scaleShowLabels: true,
+		        bezierCurve: false,
+		      });
+
+		    </script>
+		  </center>
+		</div>>
+	</div>
+		</form>
+{% endblock content %}
