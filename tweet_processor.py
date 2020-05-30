@@ -89,7 +89,7 @@ class TwitterSentimentAnalysis():
 
         return df
     
-    def get_tweet_range_df(self, lookback, tweets_per_day, senti=True, cleanloc=True):
+    def get_tweet_range_df(self, lookback, tweets_per_day, senti=True, cleanloc=True, getCentroid=True):
         # lookback = days to look back from
         # last day = end of looking period, set to today
         # resultion = tweets per day that will come up
@@ -134,31 +134,75 @@ class TwitterSentimentAnalysis():
             
             df = self.get_df_sentiments(df)
             
+        #country_list = []
+        lats = []
+        lons = []
+            
         if cleanloc:
-            country_list = []
             # This condition will get a lat/lon pair for the location proiveded if google maps can process it
             # if not it will remain Nan
-            
+            c = 0
+            #coordSet = False
             for loc in df['location']:
-                #we can use the tweet parser to also parse the addresses
-             #   print(loc)
-                
-                if loc == '':
-                    country_list.append(np.nan)
+                #coordSet = False
+                c += 1
+                #print("itter")
+                    #we can use the tweet parser to also parse the addresses
+                 #   print(loc)
+
+                if loc == '': 
+                    #country_list.append(np.nan)
+                    lats.append(np.nan)
+                    #print("adding nan to lat, itter: " + str(c))
+                    lons.append(np.nan)
                     continue
                     
-                try:
-                    gmapsRETURN = self.gmaps.geocode(loc)
+                gmapsRETURN = self.gmaps.geocode(loc)
 
-                    for item in gmapsRETURN[0]['address_components']:
-                        if item['types'] == ['country', 'political']:
-                            country_list.append(item['long_name'])
+                la = []
+                lo = []
+
+                count = 0
+
+                try:
+                    #x = gmapsRETURN[0]['address_components']
+                    y = gmapsRETURN[0]['geometry']['bounds']
+                    
                 except:
-                    country_list.append(np.nan)
+                    #print("adding nan to lat, itter: " + str(c))
+                    lats.append(np.nan)
+                    lons.append(np.nan)
+                    #country_list.append(np.nan)
+                    #print('nanE')
                     continue
-            
-            #print(country_list, len(country_list))
-            df['country'] = country_list
+                
+                '''   
+                for item in gmapsRETURN[0]['address_components']:
+                    if item['types'] == ['country', 'political']:
+                        print(item['long_name'])
+                        country_list.append(item['long_name'])
+                '''
+                for item in gmapsRETURN[0]['geometry']['bounds']:
+                    for latlon in gmapsRETURN[0]['geometry']['bounds'][item]:
+                        if count%2 == 0:
+                            la.append(gmapsRETURN[0]['geometry']['bounds'][item][latlon])
+                        else:
+                            lo.append(gmapsRETURN[0]['geometry']['bounds'][item][latlon])
+                        count += 1
+
+                la = round(sum(la)/len(la), 3)
+                lo = round(sum(lo)/len(lo), 3)
+
+                #print("adding "+ str(la) +" to lat, itter: " + str(c))
+                lats.append(la)
+                lons.append(lo)
+                continue
+
+        #print(len(df))
+        #print(len(lats), len(lons))
+        #df['country'] = country_list
+        df['centroid_lats'] = lats
+        df['centroid_lons'] = lons
         
         return df
     
@@ -167,16 +211,16 @@ class TwitterSentimentAnalysis():
         del df['likes']
         
         return df
-        
-    def get_by_country(self, df):
-        df = df[df['country'].notna()]
-        df = df.reset_index(drop=True)
-        df = df.groupby('country').agg({'sentiment':'mean'}).reset_index()
-        
-        return df
-
+    
     def get_dates_as_list(self, df):
         return [str(item)[:10] for item in df.index.to_series()]
-        
+    
+    def get_lat_lons_and_senti(self, df):
+        df = df[['sentiment', 'centroid_lats', 'centroid_lons']]
+        df = df[df['centroid_lats'].notna()]
+        df = df.reset_index(drop=True)
+        df['heatmap_weight'] = [(2.5*senti+2.5) for senti in df['sentiment']]
+        return df
+
     def get_sentiment_as_list(self, df):
         return [item for item in df['sentiment']]
