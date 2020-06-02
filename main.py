@@ -3,6 +3,7 @@ import pandas as pd
 import os
 from tweet_processor import *
 from custom_forms import timeSeriesForm
+#import lib.my_module
 
 app = Flask(__name__)
 
@@ -111,4 +112,4 @@ def gmv():
 		weight=[])
 
 if __name__ == '__main__':
-	app.run(debug=True)
+	app.run()

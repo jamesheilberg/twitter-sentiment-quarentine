@@ -1,0 +1,16 @@
+pandas
+tweepy
+numpy
+datetime
+googlemaps
+textblob
+re
+csv
+matplotlib
+google
+Flask
+Werkzeug
+flask_wtf
+wtforms
+os
+lib

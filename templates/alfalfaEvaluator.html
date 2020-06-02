@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block content %}
+	<div class='content-section'>
+		<form method="POST" action="" enctype="multipart/form-data">
+			{{ form.hidden_tag() }}
+			<fieldset class="form-group">
+				<legend class ="border-bottom mb-4">Basic Evaluator, select options and run!</legend>
+				<div class="form-group">
+					{{ form.file.label(class="form-control-label") }}
+					{{ form.file(class="form-control form-control-lg") }}
+				</div>
+				<div class="form-group">
+					{{ form.selectType.label(class="form-check-label") }}
+					{{ form.selectType(type="checkbox", class="form-control") }}
+				</div>
+				<div class="form-group">
+					{{ form.num_cuttings.label(class="form-check-label") }}
+					{{ form.num_cuttings(class="form-control form-control-lg") }}
+				</div>
+				<div class="form-group">
+					{{ form.quality_loss_per_day.label(class="form-check-label") }}
+					{{ form.quality_loss_per_day(class="form-control form-control-lg") }}
+				</div>
+				<div class="form-group">
+					{{ form.max_quality_loss.label(class="form-check-label") }}
+					{{ form.max_quality_loss(class="form-control form-control-lg") }}
+				</div>
+				<div class="form-group">
+					{{ form.per_acre_liability.label(class="form-check-label") }}
+					{{ form.per_acre_liability(class="form-control form-control-lg") }}
+				</div>
+			</fieldset>
+			<div class="form-group">
+				{{ form.submit(class="btn btn-outline-info")}}
+			</div>
+		</form>
+	</div>
+{% endblock content %}
