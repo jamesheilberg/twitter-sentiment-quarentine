@@ -111,5 +111,5 @@ def gmv():
 		lon=[],
 		weight=[])
 
-if __name__ == '__main__':
-	app.run()
+def create_app():
+	return app.run()
