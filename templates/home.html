@@ -1,67 +1,66 @@
-<!DOCTYPE html>
-<html>
-<head>
-	 <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% extends "layout.html" %}
+{% block content %}
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+<div class='content-section'>
+<p><b>README:</b></p>
 
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+<p>GENERAL:</p>
 
+<p>This repository included the required files for serving the web app UI, as well as additional files relating to my larger research goal twitter sentiment analysis.</p>
 
-	{% if title %}
-	<title>{{ appTitle }} - {{ title }}</title>
-	{% else %}
-	<title style="text-align:center">{{ appTitle }}</title>
-	{% endif %}
-</head>
-<body>
-	<!-- Navigation Bar -->
-	<header class="site-header">
-	  <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
-	    <div class="container">
-	      <a class="navbar-brand mr-4" href="/">{{ appTitle }}</a>
-	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-	        <span class="navbar-toggler-icon"></span>
-	      </button>
-	      <div class="collapse navbar-collapse" id="navbarToggle">
-	        <div class="navbar-nav mr-auto">
-	          <a class="nav-item nav-link" href="/">Home</a>
-	          <a class="nav-item nav-link" href="/timeSeriesVisualization">Time Series Visualization</a>
-	          <a class="nav-item nav-link" href="/googleMapsVisualization">Google Maps Visualization</a>
+<p>The web app can run locally by cloning this repository, navigating to that folder in your terminal, and running &ldquo;$python flask_app.py.&rdquo;</p>
 
-	        </div>
-	        <!-- Navbar Right Side -->
-	        <div class="navbar-nav">
-	        	<!-- placeholder for links going on the right side of the header -->
-	        </div>
-	      </div>
-	    </div>
-	  </nav>
-	</header>
-	<!-- Navigation Bar END -->
+<p>Be sure that it is python3.7 or higher.</p>
 
-	<main role="main" class="container">
-	  <div class="row">
-	    <div class="col-md-8">
-	    	{% with messages = get_flashed_messages(with_categories=true) %}
-	    		{% if messages %}
-	    			{% for category, message in messages %}
-	    				<div class="alert alert-{{ catergory }}">
-	    					{{ message }}
-	    				</div>
-	    			{% endfor %}
-	    		{% endif %}
-	    	{% endwith %}
-	    </div>
-	  </div>
-	</main>
-	<!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-</body>
-</html>
+<p>
+The python class for tweet analyzing is located in tweet_processor.py</p>
+
+<p>&ldquo;Tweets.json&rdquo; and &ldquo;twitter_auth.py&rdquo; are not required however</p>
+
+<p>Finally -- Be sure you have the following packages and libraries installed on you local machine, should you wish to run this locally:</p>
+
+<p>To check, navigate your terminal to the source folder and:<br>
+&ldquo;$ pip install requirements.txt&rdquo;</p>
+
+<p>
+TWEET_PROCESSOR:</p>
+
+<p>Tweet processing begins with the twitter API. I used the Tweepy library to take advantage of the Cursor method, which allows me to scrape a sample of tweets. I also have to use the google maps API to convert string location lat/lon pairs for the heatmap eventually.</p>
+
+<p>**Please Note**<br>
+-- I am using these APIs for free. This means that I am on their most basic plan and have very, very low limits and speeds. For example, the lookback is only a max of 8 days as the API does not provide more. Also a request with a sample size above 500/day can take long just for API processing. Expect to wait a minute or two after generating something. Go get a coffee!</p>
+
+<p>After scraping tweets, I parse them into a pandas dataframe to allow easy grouping and pivoting of data.</p>
+
+<p>One method I&rsquo;d like to highlight is get_tweet_range_df(). This method gets a full dataframe of n random samples per day in lookback. It uses the tweet_sentiment_score() method. This is where the NLP polarity scoring takes place. For this I decided to use TextBlob&rsquo;s NLP polarity scored of text method. TextBlob can be very powerful! For more https://textblob.readthedocs.io/en/dev/index.html</p>
+
+<p>WEB_APP</p>
+
+<p>For the web app, I used python flask, html, javascript, css, and json, along with a bunch of packages. Dont worry, the packages are included when running the virtual env locally.</p>
+
+<p>WEB_APP INSTRUCTIONS:</p>
+
+<p>I decided to use a simple csv as my database for the ease of implementation. I am confindent that querying from the csv will provide a fast enough experience client end.</p>
+
+<p>For the time series visualization, and the google maps visualization the user has a choice in how many days before today to lookback. For example a look back of 7 will look from all of yesterday, up to and including 7 days before.</p>
+
+<p>The tweets per day is a setting that allows the user to select how many tweets should be sampled in each days bucket when computing average tweet sentiment per day.</p>
+
+<p>The sentiment value is a number -1 to 1 where -1 is the worst sentiment and 1 is the best. For the most part, I have noticed that average sentiment is usually positive, but I will keep monitoring.</p>
+
+<p>In the google maps visualization, sentiment by location is displayed in heatmap format. Red hot locations are positive, green is negative, and yellow is neutral by default.</p>
+
+<p>I know some users find the default color scheme a bit confusing. The color scheme can be changed however on the map.</p>
+
+<p>
+FINAL NOTES:</p>
+
+<p>This project has taken a good majority of 2 weeks for me. I was very comfortable with the data handling and analysis coming in, but I was weaker in javascript and html. As I progressed through the project however, I became more comfortable with these languages.</p>
+
+<p>In the future, I would like to re-write certain parts of my app to accomodate a growing and automatically updating sqlite database. I could do this by streaming tweets in, which would enable the app to handle much larger tweets per day values, and ultimatly farther lookbacks.</p>
+
+<p>Thank you very much for visiting!</p>
+
+</div>
+
+{% endblock content %}

@@ -127,5 +127,5 @@ def main():
 	analysis.update(df)
 
 if __name__ == '__main__':
-	main()
+	#main()
 	app.run()

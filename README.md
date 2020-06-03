@@ -31,6 +31,29 @@ One method I’d like to highlight is get_tweet_range_df(). This method gets a f
 
 WEB_APP
 
-For the web app, I used python flask, html, javascript, css, and json
+For the web app, I used python flask, html, javascript, css, and json, along with a bunch of packages. Dont worry, the packages are included when running the virtual env locally.
+
+WEB_APP INSTRUCTIONS:
+
+I decided to use a simple csv as my database for the ease of implementation. I am confindent that querying from the csv will provide a fast enough experience client end.
+
+For the time series visualization, and the google maps visualization the user has a choice in how many days before today to lookback. For example a look back of 7 will look from all of yesterday, up to and including 7 days before.
+
+The tweets per day is a setting that allows the user to select how many tweets should be sampled in each days bucket when computing average tweet sentiment per day.
+
+The sentiment value is a number -1 to 1 where -1 is the worst sentiment and 1 is the best. For the most part, I have noticed that average sentiment is usually positive, but I will keep monitoring.
+
+In the google maps visualization, sentiment by location is displayed in heatmap format. Red hot locations are positive, green is negative, and yellow is neutral by default.
+
+I know some users find the default color scheme a bit confusing. The color scheme can be changed however on the map.
+
+
+FINAL NOTES:
+
+This project has taken a good majority of 2 weeks for me. I was very comfortable with the data handling and analysis coming in, but I was weaker in javascript and html. As I progressed through the project however, I became more comfortable with these languages.
+
+In the future, I would like to re-write certain parts of my app to accomodate a growing and automatically updating sqlite database. I could do this by streaming tweets in, which would enable the app to handle much larger tweets per day values, and ultimatly farther lookbacks.
+
+Thank you very much for visiting!
 
 
