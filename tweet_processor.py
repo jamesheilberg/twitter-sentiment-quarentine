@@ -207,14 +207,16 @@ class TwitterSentimentAnalysis():
         return df
     
     def update(self, df, filepath='csvFiles/tweets.csv'):
-        return df.to_csv(filepath, index=False, date_format='%s')
+        return df.to_csv(filepath, index=False)
     
-    def read_csv(self, filepath='csvFiles/tweets.csv'):
-        df = pd.read_csv(filepath)
-        df['created'] = pd.DatetimeIndex(df['created'])
+    def read_csv(self, fname='csvFiles/tweets.csv'):
+        df = pd.read_csv(fname)
+        df['created'] = pd.to_datetime(df['created'])
         return df
     
-    def get_by_date(self, df):
+    def get_by_date(self, df, lookback):
+        firstd = self.today - timedelta(days=lookback)
+        df = df[(df['created']>firstd) & (df['created']<self.today)]
         df = df.resample('D', on='created').mean()
         del df['likes']
         
@@ -230,11 +232,15 @@ class TwitterSentimentAnalysis():
     def get_dates_as_list(self, df):
         return [str(item)[:10] for item in df.index.to_series()]
     
-    def get_lat_lons_and_senti(self, df):
-        df = df[['sentiment', 'centroid_lats', 'centroid_lons']]
+    def get_lat_lons_and_senti(self, df, lookback):
+        df = df[['sentiment', 'centroid_lats', 'centroid_lons', 'created']]
         df = df[df['centroid_lats'].notna()]
         df = df.reset_index(drop=True)
         df['heatmap_weight'] = [(2.5*senti+2.5) for senti in df['sentiment']]
+        
+        firstd = self.today - timedelta(days=lookback)
+        df = df[(df['created']>firstd) & (df['created']<self.today)]
+        df = df[['sentiment', 'centroid_lats', 'centroid_lons', 'created', 'heatmap_weight']]
         return df
 
     def get_sentiment_as_list(self, df):

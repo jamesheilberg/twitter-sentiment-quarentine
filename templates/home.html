@@ -27,8 +27,6 @@ TWEET_PROCESSOR:</p>
 
 <p>Tweet processing begins with the twitter API. I used the Tweepy library to take advantage of the Cursor method, which allows me to scrape a sample of tweets. I also have to use the google maps API to convert string location lat/lon pairs for the heatmap eventually.</p>
 
-<p>**Please Note**<br>
--- I am using these APIs for free. This means that I am on their most basic plan and have very, very low limits and speeds. For example, the lookback is only a max of 8 days as the API does not provide more. Also a request with a sample size above 500/day can take long just for API processing. Expect to wait a minute or two after generating something. Go get a coffee!</p>
 
 <p>After scraping tweets, I parse them into a pandas dataframe to allow easy grouping and pivoting of data.</p>
 

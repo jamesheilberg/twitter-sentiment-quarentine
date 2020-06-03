@@ -41,7 +41,7 @@ def tsv():
 		# The analysis is done each time a new user presses run
 
 		df = analysis.read_csv()
-		byDate = analysis.get_by_date(df)
+		byDate = analysis.get_by_date(df, lookback)
 		xAxis = analysis.get_dates_as_list(byDate)
 		yAxis = analysis.get_sentiment_as_list(byDate)
 
@@ -82,7 +82,7 @@ def gmv():
 		tweets_per_day = form.daily_sample_size.data
 
 		df = analysis.read_csv()
-		df = analysis.get_lat_lons_and_senti(df)
+		df = analysis.get_lat_lons_and_senti(df, lookback)
 
 		lats = [x for x in df['centroid_lats']]
 		lons = [x for x in df['centroid_lons']]
@@ -122,7 +122,7 @@ def create_app():
 def main():
 	analysis = TwitterSentimentAnalysis()
 	lookback = 8
-	tweets_per_day = 100
+	tweets_per_day = 4000
 	df = analysis.get_tweet_range_df(lookback, tweets_per_day)
 	analysis.update(df)
 

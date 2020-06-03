@@ -5,8 +5,8 @@ from wtforms.validators import DataRequired, Length, NumberRange
 
 class timeSeriesForm(FlaskForm):
 	#MAX LOOKBACK 8 DAYS -- Twitter API constraint
-	lookback = IntegerField('Days Lookback (Max: 8 days):', validators=[DataRequired(), NumberRange(min=1, max=8)])
-	daily_sample_size = IntegerField('Daily Sample Size (Max: 2000):', validators=[DataRequired(), NumberRange(min=1, max=2000)])
+	lookback = IntegerField('Days Lookback (Max: 7 days):', validators=[DataRequired(), NumberRange(min=1, max=7)])
+	daily_sample_size = IntegerField('Daily Sample Size (Max: 3000) INOP-WIP:', validators=[DataRequired(), NumberRange(min=1, max=3000)])
 	submit = SubmitField('generate')
 
 
