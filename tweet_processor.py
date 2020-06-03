@@ -206,9 +206,24 @@ class TwitterSentimentAnalysis():
         
         return df
     
+    def update(self, df, filepath='csvFiles/tweets.csv'):
+        return df.to_csv(filepath, index=False, date_format='%s')
+    
+    def read_csv(self, filepath='csvFiles/tweets.csv'):
+        df = pd.read_csv(filepath)
+        df['created'] = pd.DatetimeIndex(df['created'])
+        return df
+    
     def get_by_date(self, df):
         df = df.resample('D', on='created').mean()
         del df['likes']
+        
+        return df
+        
+    def get_by_country(self, df):
+        df = df[df['country'].notna()]
+        df = df.reset_index(drop=True)
+        df = df.groupby('country').agg({'sentiment':'mean'}).reset_index()
         
         return df
     

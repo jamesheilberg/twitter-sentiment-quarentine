@@ -6,6 +6,8 @@ from custom_forms import timeSeriesForm
 #import lib.my_module
 
 app = Flask(__name__)
+UPLOAD_FOLDER = 'uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 app.config['SECRET_KEY'] = 'password' #this can be changed to >=16 byte hex if security is an issue
 # this app wont really be 'secure'. It is meant to be a prototype.
@@ -38,7 +40,8 @@ def tsv():
 
 		# The analysis is done each time a new user presses run
 
-		byDate = analysis.get_by_date(analysis.get_tweet_range_df(lookback, tweets_per_day))
+		df = analysis.read_csv()
+		byDate = analysis.get_by_date(df)
 		xAxis = analysis.get_dates_as_list(byDate)
 		yAxis = analysis.get_sentiment_as_list(byDate)
 
@@ -78,14 +81,7 @@ def gmv():
 		lookback = form.lookback.data
 		tweets_per_day = form.daily_sample_size.data
 
-		#BEGIN ANALYSIS
-		# This line below will take a lot of time
-		# it is set to not allow the API calls to go above a certain limit
-		# thus, it will take a lot of time for larger tweet per day values
-
-		# The analysis is done each time a new user presses run
-
-		df = analysis.get_tweet_range_df(lookback, tweets_per_day)
+		df = analysis.read_csv()
 		df = analysis.get_lat_lons_and_senti(df)
 
 		lats = [x for x in df['centroid_lats']]
@@ -111,5 +107,25 @@ def gmv():
 		lon=[],
 		weight=[])
 
+#@app.route("/download-tsv-csv")
+
 def create_app():
+
+	#BEGIN ANALYSIS
+		# This line below will take a lot of time
+		# it is set to not allow the API calls to go above a certain limit
+		# thus, it will take a lot of time for larger tweet per day values
+
+		# The analysis is done each time a new user presses run
 	return app.run()
+
+def main():
+	analysis = TwitterSentimentAnalysis()
+	lookback = 8
+	tweets_per_day = 100
+	df = analysis.get_tweet_range_df(lookback, tweets_per_day)
+	analysis.update(df)
+
+if __name__ == '__main__':
+	main()
+	app.run()
